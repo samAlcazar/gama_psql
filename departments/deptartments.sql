@@ -1,11 +1,20 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-CREATE TABLE dependencias (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    nombre VARCHAR(150) NOT NULL,              -- 'Secretaría Técnica'
-    sigla VARCHAR(20) UNIQUE,                  -- 'SEC-TEC' (para códigos y referencias rápidas)
-    dependencia_padre_id UUID REFERENCES dependencias(id), -- Jerarquía (Secretaría Técnica contiene a Soporte Técnico)
-    nivel SMALLINT NOT NULL DEFAULT 1,         -- 1: Secretaría, 2: Dirección, 3: Unidad/Oficina
-    activo BOOLEAN DEFAULT true,               -- Para bajas lógicas, nunca eliminar
-    fecha_creacion TIMESTAMPTZ DEFAULT NOW()
+DROP TABLE IF EXISTS departments CASCADE;
+
+CREATE TABLE departments (
+    id UUID DEFAULT gen_random_uuid(),
+    name VARCHAR(150) NOT NULL,
+    sigla VARCHAR(20) UNIQUE,
+    parent_department_id UUID,
+    level SMALLINT NOT NULL DEFAULT 1,
+    active BOOLEAN DEFAULT true,
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    
+    CONSTRAINT pk_department_id PRIMARY KEY (id),
+    CONSTRAINT uk_department_sigla UNIQUE (sigla),
+    CONSTRAINT fk_parent_department FOREIGN KEY (parent_department_id) 
+        REFERENCES departments(id) 
+        ON DELETE RESTRICT 
+        ON UPDATE CASCADE
 );

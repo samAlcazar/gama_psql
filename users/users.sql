@@ -1,4 +1,4 @@
-CREATE TABLE usuarios (
+CREATE TABLE users (
     id UUID DEFAULT gen_random_uuid(),
     
     -- Datos de identificación
@@ -31,5 +31,6 @@ CREATE TABLE usuarios (
     CONSTRAINT uk_user_ci UNIQUE (user_ci),
     CONSTRAINT uk_user_email UNIQUE (user_email),
     CONSTRAINT uk_user_phone UNIQUE (user_phone),
-    CONSTRAINT fk_department_id FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE RESTRICT
+    CONSTRAINT fk_department_id FOREIGN KEY (department_id) REFERENCES departments(id) ON DELETE RESTRICT,
+    CONSTRAINT fk_user_principal_role FOREIGN KEY (user_principal_role) REFERENCES roles(name) ON DELETE RESTRICT ON UPDATE CASCADE
 );
